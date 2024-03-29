@@ -86,17 +86,32 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
                 padding: const EdgeInsets.only(
                     left: AppSizeUtils.wholePadding,
                     right: AppSizeUtils.wholePadding),
-                child: RatingBarIndicator(
-                  rating: 4,
-                  itemBuilder: (context, index) {
-                    return Icon(
-                      Icons.star,
-                      color: AppColorsUtils.ratingColor,
-                    );
-                  },
-                  itemCount: 5,
-                  itemSize: AppSizeUtils.titleSize,
-                  direction: Axis.horizontal,
+                child: Row(
+                  mainAxisSize: MainAxisSize.max,
+                  children: [
+                    RatingBarIndicator(
+                      rating: (movieItemModel?.popularity??1.0)/2,
+                      itemBuilder: (context, index) {
+                        return Icon(
+                          Icons.star,
+                          color: AppColorsUtils.ratingColor,
+                        );
+                      },
+                      itemCount: 5,
+                      itemSize: AppSizeUtils.titleSize,
+                      direction: Axis.horizontal,
+                      unratedColor: AppColorsUtils.disabledColor,
+                    ),
+                    const SizedBox(width: AppSizeUtils.wholePadding,),
+                    Text("( ${((movieItemModel?.popularity??1.0)/2).toStringAsFixed(2)} / 5.0 )",
+                      style: TextStyle(
+                        color: themeColors!.getTextColor(),
+                        fontSize: AppSizeUtils.bodyTextSize,
+                        fontWeight: FontWeight.normal,
+                        decoration: TextDecoration.none,
+                      ),
+                    ),
+                  ],
                 ),
               ),
               const SizedBox(height: AppSizeUtils.wholePadding),

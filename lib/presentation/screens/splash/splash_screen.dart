@@ -50,9 +50,6 @@ class _SplashScreenState extends State<SplashScreen> {
   {
     isShowDialog = true;
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      // Navigator.push(context, MaterialPageRoute(
-      //     builder: (_)=> const TrailerPlayerScreen(trailerKey: "zSWdZVtXT7E")),
-      // );
       ChooseLocationDialog().showLocationDialog(context, (index) {
         onConfirmClick = true;
         onClickConfirm(context);

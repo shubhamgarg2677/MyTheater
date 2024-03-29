@@ -56,7 +56,7 @@ class MovieItemModel {
       adult: map["adult"] as bool,
       posterUrl: map["poster_path"] as String,
       releaseDate: map["release_date"] as String,
-      popularity: map["popularity"] as double,
+      popularity: map["vote_average"] as double,
       video: map["video"] as bool,
       genreList: map["genres"] != null
           ? List<GenreModel>.from((map["genres"] as List)
