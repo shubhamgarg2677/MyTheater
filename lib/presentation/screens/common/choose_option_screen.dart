@@ -10,8 +10,9 @@ class ChooseOptionScreen extends StatefulWidget {
   final String titleText;
   final String hintText;
   final List<String> dataList;
+  final String? value;
   const ChooseOptionScreen({Key? key, required this.onConfirm,
-    required this.hintText, required this.titleText, required this.dataList}) : super(key: key);
+    required this.hintText, required this.titleText, required this.dataList, this.value}) : super(key: key);
 
   @override
   State<ChooseOptionScreen> createState() => _ChooseOptionScreenState();
@@ -44,8 +45,11 @@ class _ChooseOptionScreenState extends State<ChooseOptionScreen> {
           const SizedBox(height: AppSizeUtils.wholePadding),
           DropDownWidget(
             items: widget.dataList,
-            hintText: widget.hintText, labelText: widget.hintText,
-            getChangeValue: onChangeValue,),
+            hintText: widget.hintText,
+            labelText: widget.hintText,
+            getChangeValue: onChangeValue,
+            value: widget.value,
+          ),
           const SizedBox(height: AppSizeUtils.wholePadding),
           Row(
             mainAxisAlignment: MainAxisAlignment.start,

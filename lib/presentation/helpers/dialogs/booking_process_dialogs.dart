@@ -20,114 +20,111 @@ class BookingProcessDialogs {
   ];
   List<String> timeList = const [
     "10:00",
+    "11:00",
     "12:00",
     "2:00",
     "4:00",
     "6:00",
     "8:00",
-    "10:00"
+    "9:00"
   ];
   BookingDetailModel bookingDetailModel = BookingDetailModel();
+  int? bookingId;
 
   BookingProcessDialogs(this.movieItemModel);
 
-  void chooseCinemaDialog(BuildContext context) {
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      showDialog(
-        context: context,
-        builder: (BuildContext context) => Dialog(
-            child: ChooseOptionScreen(
-                onConfirm: (index) {
-                  if(index!=null){
-                    onClickConfirmCinema(index, context);
-                  }
-                },
-                hintText: "Choose Cinema",
-                titleText: "Choose your Cinema :",
-                dataList: cinemaList)),
-      );
-    });
+  Future<int?> chooseCinemaDialog(BuildContext context) async {
+    await showDialog(
+      context: context,
+      builder: (BuildContext context) => Dialog(
+          child: ChooseOptionScreen(
+              onConfirm: (index) {
+                if(index!=null){
+                  _onClickConfirmCinema(index, context);
+                }
+              },
+              hintText: "Choose Cinema",
+              titleText: "Choose your Cinema :",
+              dataList: cinemaList)),
+    );
+    return bookingId;
   }
 
-  void chooseTimingDialog(BuildContext context) {
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      showDialog(
-        context: context,
-        builder: (BuildContext context) => Dialog(
-            child: ChooseOptionScreen(
-                onConfirm: (index) {
-                  if(index!=null){
-                    onClickConfirmTime(index, context);
-                  }
-                },
-                hintText: "Choose Cinema Time",
-                titleText: "Choose your Timing:",
-                dataList: timeList)),
-      );
-    });
+  void _chooseTimingDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) => Dialog(
+          child: ChooseOptionScreen(
+              onConfirm: (index) {
+                if(index!=null){
+                  _onClickConfirmTime(index, context);
+                }
+              },
+              hintText: "Choose Cinema Time",
+              titleText: "Choose your Timing:",
+              dataList: timeList)),
+    );
   }
 
-  void chooseSeatDialog(BuildContext context) {
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      showDialog(
-        context: context,
-        builder: (BuildContext context) => Dialog(child: SelectSeatScreen(
-          onConfirm: (row, seat) {
-            if(row!=null && seat!=null){
-              bookingDetailModel.seatRow = row;
-              bookingDetailModel.seatNumber =  seat;
-              onClickConfirmSeat(context);
-            }
-          },
-        )),
-      );
-    });
+  void _chooseSeatDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) => Dialog(child: SelectSeatScreen(
+        onConfirm: (row, seat) {
+          if(row!=null && seat!=null){
+            bookingDetailModel.seatRow = row;
+            bookingDetailModel.seatNumber =  seat;
+            _onClickConfirmSeat(context);
+          }
+        },
+      )),
+    );
   }
 
-  void paymentDoneDialog(BuildContext context, int bookingId) {
+  Future<void> _paymentDoneDialog(BuildContext context, int bookingId) async {
     if(movieItemModel!=null){
-      WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-        showDialog(
-          context: context,
-          builder: (BuildContext context) => const Dialog(
-            child: PaymentDoneScreen(),
-          ),
-        ).timeout(const Duration(seconds: 3), onTimeout: () {
-          Navigator.pop(context);
-          Navigator.push(
-              context,
+      await showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context) => const Dialog(
+          child: PaymentDoneScreen(),
+        ),
+      ).timeout(const Duration(seconds: 3), onTimeout: (){
+        if(context.mounted){
+          Navigator.pushAndRemoveUntil(context,
               MaterialPageRoute(
-                  builder: (context) => TicketScreen(
-                    movieItemModel: movieItemModel!,
-                    bookingId: bookingId,
-                    isDetailScreen:
-                    movieItemModel!.trailerKey != null ? true : false,
-                  )));
-        });
+              builder: (context) => TicketScreen(
+                movieItemModel: movieItemModel!,
+                bookingId: bookingId,
+                isDetailScreen:
+                movieItemModel!.trailerKey != null ? true : false,
+              )),
+            ModalRoute.withName('/MovieList'),
+          );
+        }
       });
     }
   }
 
-  void onClickConfirmCinema(int index, BuildContext context) {
+  void _onClickConfirmCinema(int index, BuildContext context) {
     bookingDetailModel.cinema = cinemaList[index];
     bookingDetailModel.movieName = movieItemModel?.name;
     bookingDetailModel.movieId = movieItemModel?.movieId;
     Navigator.pop(context);
-    chooseTimingDialog(context);
+    _chooseTimingDialog(context);
   }
 
-  void onClickConfirmTime(int index, BuildContext context) {
+  void _onClickConfirmTime(int index, BuildContext context) {
     bookingDetailModel.time = timeList[index];
     Navigator.pop(context);
-    chooseSeatDialog(context);
+    _chooseSeatDialog(context);
   }
 
-  Future<void> onClickConfirmSeat(BuildContext context) async {
-    Navigator.pop(context);
+  Future<void> _onClickConfirmSeat(BuildContext context) async {
     DataDbRepositories dataDbRepositories = DataDbRepositories(null);
-    int? bookingId = await dataDbRepositories.setBookingDetails(bookingDetailModel);
+    bookingId = await dataDbRepositories.setBookingDetails(bookingDetailModel);
     if(bookingId!=null && context.mounted){
-      paymentDoneDialog(context, bookingId);
+      _paymentDoneDialog(context, bookingId!);
     }
   }
 }

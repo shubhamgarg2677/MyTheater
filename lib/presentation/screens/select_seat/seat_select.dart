@@ -72,6 +72,14 @@ class _SelectSeatScreenState extends State<SelectSeatScreen> {
 
   void onChangeRowValue(String value) async{
     selectedRow = value;
+    if(selectedSeat!=null && selectedRow!=null)
+    {
+      WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+        setState(() {
+          buttonDisabled = false;
+        });
+      });
+    }
   }
 
   void onChangeSeatValue(String value) async{

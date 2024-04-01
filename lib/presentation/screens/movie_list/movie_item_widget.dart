@@ -9,6 +9,7 @@ import '../../helpers/dialogs/booking_process_dialogs.dart';
 import '../../utils/size/app_size_utils.dart';
 import '../common/network_image_widget.dart';
 import '../movie_detail/movie_detail_screen.dart';
+import '../ticket/ticket_screen.dart';
 
 class MovieItemWidget extends StatelessWidget {
   final MovieItemModel movieItemModel;
@@ -156,8 +157,18 @@ class MovieItemWidget extends StatelessWidget {
                     right: AppSizeUtils.singlePadding,
                   ),
                   child: IconButton(
-                    onPressed: (){
-                      BookingProcessDialogs(movieItemModel).chooseCinemaDialog(context);
+                    onPressed: ()async{
+                      int? bookingId = await BookingProcessDialogs(movieItemModel).chooseCinemaDialog(context);
+                      if(bookingId!=null && context.mounted){
+                        Navigator.pop(context, MaterialPageRoute(
+                            builder: (context) => TicketScreen(
+                              movieItemModel: movieItemModel,
+                              bookingId: bookingId,
+                              isDetailScreen:
+                              movieItemModel.trailerKey != null ? true : false,
+                            )),
+                        );
+                      }
                     },
                     style: ButtonStyle(
                         backgroundColor: MaterialStateProperty.all<Color>(AppColorsUtils.appColor)

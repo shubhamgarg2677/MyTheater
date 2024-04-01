@@ -26,7 +26,7 @@ class DataDbRepositories extends DbRepositories{
       else{
         movieItemModel = await DataApiRepositories(_apiService).getMovieDetails(movieId);
         if(movieItemModel!=null){
-          movieDetailBox.put(movieItemModel.movieId, movieItemModel);
+          await movieDetailBox.put(movieItemModel.movieId, movieItemModel);
         }
       }
       await movieDetailBox.close();
@@ -50,7 +50,7 @@ class DataDbRepositories extends DbRepositories{
       else{
         movieItemsList = await DataApiRepositories(_apiService).getUpcomingMovies();
         if(movieItemsList!=null){
-          moviesListBox.put("MoviesList", movieItemsList);
+          await moviesListBox.put("MoviesList", movieItemsList);
         }
       }
       await moviesListBox.close();
@@ -87,10 +87,12 @@ class DataDbRepositories extends DbRepositories{
         Map<int, BookingDetailModel>? bookingDetailItemsList = Map<int, BookingDetailModel>.from(bookingsListBox.get("BookingDetails"));
         bookingDetailModel.bookingId = bookingDetailItemsList.length + 1;
         bookingDetailItemsList.putIfAbsent(bookingDetailModel.bookingId!, () => bookingDetailModel);
-        bookingsListBox.put("BookingDetails", bookingDetailItemsList);
+        await bookingsListBox.put("BookingDetails", bookingDetailItemsList);
       } else{
         bookingDetailModel.bookingId = 1;
-        bookingsListBox.put("BookingDetails", {bookingDetailModel.bookingId, bookingDetailModel});
+        Map<int, BookingDetailModel>? bookingDetailItemsList = <int, BookingDetailModel>{};
+        bookingDetailItemsList.putIfAbsent(bookingDetailModel.bookingId!, () => bookingDetailModel);
+        await bookingsListBox.put("BookingDetails", bookingDetailItemsList);
       }
       await bookingsListBox.close();
       return bookingDetailModel.bookingId;
@@ -115,5 +117,23 @@ class DataDbRepositories extends DbRepositories{
       debugPrint(e.toString());
     }
     return bookingDetailItemsList;
+  }
+
+  @override
+  Future<MovieItemModel?> getMovieItem(int movieId) async {
+    try{
+      MovieItemModel? movieItem;
+      Box moviesListBox = await Hive.openBox(ConnectionString.moviesListBox);
+      if(moviesListBox.containsKey("MoviesList")) {
+        var dataList = moviesListBox.get("MoviesList");
+        movieItem = List<MovieItemModel>.from(dataList).firstWhere((element) => element.movieId==movieId);
+      }
+      await moviesListBox.close();
+      return movieItem;
+    }
+    catch(e,s){
+      debugPrint(e.toString());
+    }
+    return null;
   }
 }

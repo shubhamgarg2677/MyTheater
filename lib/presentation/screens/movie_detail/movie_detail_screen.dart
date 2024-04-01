@@ -15,6 +15,7 @@ import '../../utils/colors/app_colors_util.dart';
 import '../../utils/size/app_size_utils.dart';
 import '../../utils/text/app_text_utils.dart';
 import '../error/network_error_screen.dart';
+import '../ticket/ticket_screen.dart';
 
 class MovieDetailScreen extends StatefulWidget {
   final MovieItemModel movieItemModel;
@@ -153,9 +154,19 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
       ),
       bottomNavigationBar: ActionButton(
         actionTitle: "Book Ticket",
-        onClick: () {
-          if(movieItemModel?.trailerKey != null) {
-            BookingProcessDialogs(movieItemModel).chooseCinemaDialog(context);
+        onClick: () async{
+          if(movieItemModel?.trailerKey != null){
+            int? bookingId = await BookingProcessDialogs(movieItemModel).chooseCinemaDialog(context);
+            if(bookingId!=null && context.mounted){
+              Navigator.pushReplacement(context, MaterialPageRoute(
+                  builder: (context) => TicketScreen(
+                    movieItemModel: movieItemModel!,
+                    bookingId: bookingId,
+                    isDetailScreen:
+                    movieItemModel!.trailerKey != null ? true : false,
+                  ),),
+              );
+            }
           } else{
             Fluttertoast.showToast(
                 msg: "Please till details are loading",

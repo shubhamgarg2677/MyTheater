@@ -3,7 +3,6 @@ import 'package:my_theater/data/remote/api_service.dart';
 import 'package:my_theater/data/repositories/data_db_repositories.dart';
 import 'package:my_theater/domain/models/movie_list/movie_item_model.dart';
 import 'package:my_theater/presentation/screens/error/network_error_screen.dart';
-import 'package:my_theater/presentation/screens/movie_list/movie_list_screen.dart';
 import 'package:my_theater/presentation/utils/text/app_text_utils.dart';
 import '../../helpers/dialogs/choose_location_dialog.dart';
 import '../common/icon_text_screen.dart';
@@ -53,16 +52,14 @@ class _SplashScreenState extends State<SplashScreen> {
       ChooseLocationDialog().showLocationDialog(context, (index) {
         onConfirmClick = true;
         onClickConfirm(context);
-      });
+      }, barrierDismissible: false);
     });
   }
 
   void onClickConfirm(BuildContext context) async{
     if(onConfirmClick && dataList!=null) {
       WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-        Navigator.pushReplacement(context, MaterialPageRoute(
-            builder: (_)=> MovieListScreen(dataList: dataList)),
-        );
+        Navigator.pushReplacementNamed(context, '/MovieList', arguments: dataList);
       });
     } else if(onConfirmClick){
       Navigator.pop(context);
@@ -71,6 +68,9 @@ class _SplashScreenState extends State<SplashScreen> {
         setState(() {
           networkError = true;
         });
+      }
+      else if(context.mounted){
+        Navigator.pushReplacementNamed(context, '/MovieList', arguments: dataList);
       }
     }
   }

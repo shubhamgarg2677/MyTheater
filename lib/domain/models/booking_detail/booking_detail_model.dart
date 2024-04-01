@@ -4,7 +4,7 @@ import 'package:hive/hive.dart';
 part 'booking_detail_model.g.dart';
 
 @HiveType(typeId: 4)
-class BookingDetailModel{
+class BookingDetailModel extends HiveObject{
   @HiveField(0)
   String? cinema;
   @HiveField(1)

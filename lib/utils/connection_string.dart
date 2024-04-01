@@ -5,7 +5,7 @@ class ConnectionString{
   static const String mediaBaseUrl = "https://image.tmdb.org/t/p/original";
 
   static const String apikey = "api_key";
-  static const String apikeyValue = "";
+  static const String apikeyValue = "9aee4c612da7147aa2e973eb58f1bd6d";
   static const String upcomingUrl = "upcoming";
   static const String fullDetailParams  = "append_to_response=videos,images";
 
