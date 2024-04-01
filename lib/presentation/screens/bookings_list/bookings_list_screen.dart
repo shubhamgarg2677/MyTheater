@@ -162,7 +162,6 @@ class _BookingsListScreenState extends State<BookingsListScreen> {
             builder: (_)=>TicketScreen(
               movieItemModel: movieItemModel,
               bookingId: bookingDetailModel.bookingId!,
-              isDetailScreen: true,
             )),
         );
       }

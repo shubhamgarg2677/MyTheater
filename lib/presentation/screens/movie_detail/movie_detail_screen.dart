@@ -162,8 +162,6 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
                   builder: (context) => TicketScreen(
                     movieItemModel: movieItemModel!,
                     bookingId: bookingId,
-                    isDetailScreen:
-                    movieItemModel!.trailerKey != null ? true : false,
                   ),),
               );
             }

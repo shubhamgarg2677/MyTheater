@@ -96,8 +96,6 @@ class BookingProcessDialogs {
               builder: (context) => TicketScreen(
                 movieItemModel: movieItemModel!,
                 bookingId: bookingId,
-                isDetailScreen:
-                movieItemModel!.trailerKey != null ? true : false,
               )),
             ModalRoute.withName('/MovieList'),
           );

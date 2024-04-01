@@ -11,10 +11,9 @@ import '../movie_list/movie_item_widget.dart';
 
 class TicketScreen extends StatefulWidget {
   final MovieItemModel movieItemModel;
-  final bool? isDetailScreen;
   final int bookingId;
   const TicketScreen({Key? key, required this.movieItemModel,
-    required this.bookingId, this.isDetailScreen})
+    required this.bookingId})
       : super(key: key);
 
   @override
@@ -58,7 +57,7 @@ class _TicketScreenState extends State<TicketScreen> {
           return ListView(
             children: [
               MovieItemWidget(movieItemModel: movieItemModel!,
-                isDetailScreen: widget.isDetailScreen??false,),
+                isDetailScreen: true,),
               const SizedBox(height: AppSizeUtils.singlePadding),
               Padding(
                 padding: const EdgeInsets.only(left: AppSizeUtils.wholePadding,

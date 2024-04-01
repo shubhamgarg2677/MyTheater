@@ -164,8 +164,6 @@ class MovieItemWidget extends StatelessWidget {
                             builder: (context) => TicketScreen(
                               movieItemModel: movieItemModel,
                               bookingId: bookingId,
-                              isDetailScreen:
-                              movieItemModel.trailerKey != null ? true : false,
                             )),
                         );
                       }
